@@ -2,6 +2,10 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <AzureFunctionsVersion>v2</AzureFunctionsVersion>
+    <Authors>Bryan Carlson</Authors>
+    <Company>Cook Agronomy Farm LTAR</Company>
+    <Product />
+    <RepositoryUrl>https://github.com/cafltar/CafLogisticsSampleProcessing_MergeExcelDetWithMasterDet</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="EPPlus.Core" Version="1.5.4" />
