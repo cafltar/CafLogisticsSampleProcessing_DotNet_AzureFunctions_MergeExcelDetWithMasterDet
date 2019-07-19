@@ -1,6 +1,8 @@
 # Purpose
 
-Intended to be called by Azure Logic Apps to merge a DET in Excel format with a "master" version of a similar file. Users copy the master version, enter data, submit to a folder that triggers the logic app, that calls this function to merge the new data with the master file.
+Azure Function App intended to be used by Azure Logic Apps to merge a DET in Excel format with a "master" version of a similar file. Users copy the master version, enter data, submit to a folder that triggers the logic app, that calls this function to merge the new data with the master file.
+
+App currently has one Function, so App and Function are same.
 
 # License
 
