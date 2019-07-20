@@ -46,7 +46,7 @@ namespace Caf.Projects.CafLogisticsSampleProcessing
 
             string uriDet = data?.det;
             string uriMaster = data?.master;
-            string headerRow = data?.headerRow;
+            int headerRow = data?.headerRow;
             string masterBlobContainerName = data?.masterBlobContainerName;
             string masterBlobPath = data?.masterBlobPath;
 
