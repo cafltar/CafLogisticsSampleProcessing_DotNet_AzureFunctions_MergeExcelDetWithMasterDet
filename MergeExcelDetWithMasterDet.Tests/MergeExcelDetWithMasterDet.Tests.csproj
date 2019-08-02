@@ -16,6 +16,12 @@
     <ProjectReference Include="..\MergeExcelDetWithMasterDet\MergeExcelDetWithMasterDet.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="Assets\Harvest01_2019_GP-ART-Lime_INT_YYYYMMDD_20190802.xlsm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Harvest01_2019_GP-ART-Lime_INT_YYYYMMDD_20190802_updateParam.xlsm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\LTARcafSoilDryingGrindingV1_GP_BC_20190405.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

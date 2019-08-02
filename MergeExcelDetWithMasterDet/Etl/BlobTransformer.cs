@@ -19,7 +19,7 @@ namespace Caf.Projects.CafLogisticsSampleProcessing.Etl
         /// <param name="master">Excel file for new data to be copied to</param>
         /// <param name="headerRow">Row number of header</param>
         /// <param name="templateNameRow">Row number that contains the template name - used to assume files are the same format</param>
-        /// <param name="templateNameCol">Colum number that contains the template name - used to assume files are the same format</param>
+        /// <param name="templateNameCol">Column number that contains the template name - used to assume files are the same format</param>
         /// <returns>MemoryStream of the merged files</returns>
         /// <exception cref="ArgumentException">Thrown when one or more blobs have no data or the two files do not have the same template name</exception>
         public MemoryStream MergeBlobs(
@@ -49,24 +49,24 @@ namespace Caf.Projects.CafLogisticsSampleProcessing.Etl
                         "DET file does not match Master file");
                 }
 
+                // TODO: Double check if I should be referencing row < headerRow or row < headerRow+1
+
                 // References Master, only copies from DET if cell is empty.
                 // This means values in Master cannot be changed. To make changes, create blank template with changed values in apporiate cells
-                ExcelCellAddress start = new ExcelCellAddress(headerRow+1, 1);
+                //ExcelCellAddress start = new ExcelCellAddress(headerRow+1, 1);
                 ExcelCellAddress end = masterWS.Dimension.End;
                 
-                for(int row = start.Row; row <= end.Row; row++)
+                for(int row = 1; row <= end.Row; row++)
                 {
-                    for(int col = start.Column; col <= end.Column; col++)
+                    for (int col = 1; col <= end.Column; col++)
                     {
-                        // Get value from Master, if blank, check DET for value
-                        var masterValue = masterWS.Cells[row, col].Text;
-                        if(masterValue.Length == 0)
+                        if(row < headerRow)
                         {
-                            var detValue = detWS.Cells[row, col].Text;
-                            if(detValue.Length > 0)
-                            {
-                                masterWS.Cells[row, col].Value = detValue;
-                            }
+                            UpdateWithOverwrite(masterWS,  detWS, row, col);
+                        }
+                        else
+                        {
+                            UpdateWithoutOverwrite(masterWS, detWS, row, col);
                         }
                     }
                 }
@@ -75,6 +75,44 @@ namespace Caf.Projects.CafLogisticsSampleProcessing.Etl
             }
 
             return resultStream;
+        }
+
+        // TODO: Document this
+        private bool UpdateWithOverwrite(
+            ExcelWorksheet master,
+            ExcelWorksheet det,
+            int row,
+            int col)
+        {
+            var detValue = det.Cells[row, col].Text;
+            master.Cells[row, col].Value = detValue;
+
+            return true;
+        }
+
+        // TODO: Document this
+        private bool UpdateWithoutOverwrite(
+            ExcelWorksheet master,
+            ExcelWorksheet det,
+            int row,
+            int col)
+        {
+            bool valueReplaced = false;
+
+            // Get value from Master, if blank, check DET for value
+            var masterValue = master.Cells[row, col].Text;
+            if (masterValue.Length == 0)
+            {
+                var detValue = det.Cells[row, col].Text;
+                if (detValue.Length > 0)
+                {
+                    master.Cells[row, col].Value = detValue;
+
+                    valueReplaced = true;
+                }
+            }
+
+            return valueReplaced;
         }
 
         /// <summary>

@@ -89,6 +89,34 @@ namespace IngestExcelDetTest.Tests
             }
         }
 
+        [Fact]
+        public async void MergeBlobs_ChangeParameterValue_UpdatesValue()
+        {
+            // Arrange
+            Mock<IBlobExtractor> extractor = new Mock<IBlobExtractor>();
+            extractor.Setup(l => l.ExtractBlobAsync(It.IsAny<string>()))
+                .Returns((string input) => Task.FromResult<MemoryStream>(
+                    GetMemoryStreamFromFile(input)));
+
+            var det = await extractor.Object.ExtractBlobAsync(
+               "Assets/Harvest01_2019_GP-ART-Lime_INT_YYYYMMDD_20190802_updateParam.xlsm");
+            var master = await extractor.Object.ExtractBlobAsync(
+                "Assets/Harvest01_2019_GP-ART-Lime_INT_YYYYMMDD_20190802.xlsm");
+
+            BlobTransformer sut = new BlobTransformer();
+
+            // Act
+            MemoryStream ms = sut.MergeBlobs(det, master, 7);
+
+            // Assert
+            using (ExcelPackage package = new ExcelPackage(ms))
+            {
+                ExcelWorksheet ws = package.Workbook.Worksheets[1];
+                Assert.True(ws.Cells[2, 2].GetValue<int>() == 4);
+            }
+            
+        }
+
         private MemoryStream GetMemoryStreamFromFile(string filePath)
         {
             FileStream fileStream = File.OpenRead(filePath);
