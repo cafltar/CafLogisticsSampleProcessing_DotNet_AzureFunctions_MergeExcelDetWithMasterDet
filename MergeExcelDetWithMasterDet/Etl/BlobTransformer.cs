@@ -49,11 +49,8 @@ namespace Caf.Projects.CafLogisticsSampleProcessing.Etl
                         "DET file does not match Master file");
                 }
 
-                // TODO: Double check if I should be referencing row < headerRow or row < headerRow+1
-
-                // References Master, only copies from DET if cell is empty.
-                // This means values in Master cannot be changed. To make changes, create blank template with changed values in apporiate cells
-                //ExcelCellAddress start = new ExcelCellAddress(headerRow+1, 1);
+                // References Master, only copies from DET if cell is empty or is a parameter (cell above header row)
+                // This means values in Master cannot be changed.
                 ExcelCellAddress end = masterWS.Dimension.End;
                 
                 for(int row = 1; row <= end.Row; row++)
@@ -77,7 +74,14 @@ namespace Caf.Projects.CafLogisticsSampleProcessing.Etl
             return resultStream;
         }
 
-        // TODO: Document this
+        /// <summary>
+        /// Copies cell value in DET to same cell in Master, overwrites any previous values
+        /// </summary>
+        /// <param name="master">Master file with value to overwrite</param>
+        /// <param name="det">DET file with value to write to Master</param>
+        /// <param name="row">Row number of cell with value</param>
+        /// <param name="col">Column number of cell with value</param>
+        /// <returns>true if value copied</returns>
         private bool UpdateWithOverwrite(
             ExcelWorksheet master,
             ExcelWorksheet det,
@@ -90,7 +94,14 @@ namespace Caf.Projects.CafLogisticsSampleProcessing.Etl
             return true;
         }
 
-        // TODO: Document this
+        /// <summary>
+        /// Copies cell value in DET to same cell in Master, does not copy if Master has current value
+        /// </summary>
+        /// <param name="master">Master file to copy value into</param>
+        /// <param name="det">DET file with value to write to Master</param>
+        /// <param name="row">Row number of cell with value</param>
+        /// <param name="col">Column number of cell with value</param>
+        /// <returns>true if value copied, false if not</returns>
         private bool UpdateWithoutOverwrite(
             ExcelWorksheet master,
             ExcelWorksheet det,
