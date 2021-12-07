@@ -37,8 +37,8 @@ namespace Caf.Projects.CafLogisticsSampleProcessing
                 .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .Build();
-            string connectionString = config["BlobStorageConnection"] ?? 
-                config["Values:BlobStorageConnection"];
+            //string connectionString = config["BlobStorageConnection"] ?? 
+            //    config["Values:BlobStorageConnection"];
 
             // Get request body, parse json to get paths to blob files
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -49,6 +49,13 @@ namespace Caf.Projects.CafLogisticsSampleProcessing
             int headerRow = data?.headerRow;
             string masterBlobContainerName = data?.masterBlobContainerName;
             string masterBlobPath = data?.masterBlobPath;
+           
+            // Decoupling connection string from the Function app. Leaving a default value (from app settings) for backwards compatability
+            string connectionString = data?.masterBlobConnectionString;
+            if(String.IsNullOrEmpty(connectionString))
+                connectionString = config["BlobStorageConnection"] ??
+                config["Values:BlobStorageConnection"];
+
 
             log.LogInformation($"det: {uriDet}, master: {uriMaster}");
             log.LogInformation($"headerRow: {headerRow}");
@@ -64,7 +71,7 @@ namespace Caf.Projects.CafLogisticsSampleProcessing
 
             BlobTransformer merger = new BlobTransformer();
             MemoryStream updatedBlob = merger.MergeBlobs(
-                detStream, masterStream, 6);
+                detStream, masterStream, headerRow);
 
             BlobLoader uploader = new BlobLoader(connectionString);
             bool isSuccess = await uploader.LoadBlobAsync(
