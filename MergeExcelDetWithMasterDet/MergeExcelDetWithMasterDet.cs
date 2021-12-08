@@ -31,6 +31,8 @@ namespace Caf.Projects.CafLogisticsSampleProcessing
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
+            log.LogInformation("Running v1.1.0");
+
             // Get Config info
             var config = new ConfigurationBuilder()
                 .SetBasePath(Environment.CurrentDirectory)
