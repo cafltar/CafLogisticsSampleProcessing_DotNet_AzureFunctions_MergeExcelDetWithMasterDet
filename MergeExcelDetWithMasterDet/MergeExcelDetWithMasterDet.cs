@@ -63,6 +63,7 @@ namespace Caf.Projects.CafLogisticsSampleProcessing
             log.LogInformation($"headerRow: {headerRow}");
             log.LogInformation($"masterBlobContainerName: {masterBlobContainerName}");
             log.LogInformation($"masterBlobPath: {masterBlobPath}");
+            log.LogInformation($"masterBlobConnectionString: {connectionString}");
 
             // Get blobs as MemoryStream
             BlobExtractor blobLoader = new BlobExtractor(connectionString);
